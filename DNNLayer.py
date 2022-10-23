@@ -155,8 +155,8 @@ __kernel void backward(
         if self.pars is not None and self.parsDer is not None:
             self.pars.copyToCPU()
             self.parsDer.copyToCPU()
-            sumpars = np.sum(np.abs(self.pars.mem)) + 0.001
-            sumparsDer = np.sum(np.abs(self.parsDer.mem)) + 0.001
+            sumpars = np.sum(np.abs(self.pars.mem)) + 0.0000001
+            sumparsDer = np.sum(np.abs(self.parsDer.mem)) + 0.0000001
             stepSize = sumpars / sumparsDer * relativeStepSize
             knl = self.prgUpdate.update
             knl.set_scalar_arg_dtypes([None, None, np.float32, np.float32, np.float32])
@@ -255,7 +255,7 @@ __kernel void update(
         }
     }
 
-    parsDer[gid] = res;
+    parsDer[gid] += res;
 }   
             """
         elif self.layerType == DNNLayerType.RELU:
@@ -618,7 +618,7 @@ void transf(float x, float y, float *xoo, float *yoo, float p0, float p1, float 
         }
     }
 
-    parsDer[gid] = res;
+    parsDer[gid] += res;
 }
             """
         elif self.layerType == DNNLayerType.SOFTMAX:
