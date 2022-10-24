@@ -52,31 +52,6 @@ class DNN:
             if np.isnan(sumOptim).any() or np.isinf(sumOptim).any():
                 self.debug()
 
-            #if isTrain:
-            #    if lastSumOptim is not None:
-            #        self.improvements.append(lastSumOptim - sumOptim)
-            #        self.stepsizes.append(prevCSZ)
-            #        if len(self.improvements)>100:
-            #            pars = np.polyfit(self.stepsizes, self.improvements, 2)
-            #            yy = np.poly1d(pars)
-            #            maxImprov = -10000
-            #            maxImprovWhere = -1
-            #            for i in range(11):
-            #                wh = self.relativeStepSize * (0.7 + 0.6 * i / 10.0)
-            #                va = yy(wh)
-            #                if va > maxImprov:
-            #                    maxImprov = va
-            #                    maxImprovWhere = wh
-            #
-            #            if maxImprovWhere != -1:
-            #                self.relativeStepSize = maxImprovWhere
-            #            
-            #            self.improvements = self.improvements[70:]
-            #            self.stepsizes = self.stepsizes[70:]
-            #
-            #    lastSumOptim = sumOptim
-            #    prevCSZ = csz
-
         for i in range(len(self.layers)):
             print("{0} {1} {2:.4f} {3:.4f} {4:.4f}".format(i, self.layers[i].layerType, self.times[i][0], self.times[i][1], self.times[i][2]))
 
