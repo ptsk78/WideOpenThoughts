@@ -20,6 +20,7 @@ class DNNLayerType(Enum):
     SOFTMAX = 14
     SUM = 15
     FINAL = 16
+    BIAS = 17
 
 class DNNLayer:
     forwardBaseCode = """
@@ -59,6 +60,8 @@ __kernel void backward(
             if self.layerType == DNNLayerType.CONVO:
                 #self.pars = GPUMemory(np.random.rand(*parsSize).astype(np.float32))
                 self.pars = GPUMemory((2.0 * np.random.rand(*parsSize) - 1.0).astype(np.float32))
+            elif self.layerType == DNNLayerType.BIAS:
+                self.pars = GPUMemory((0.2 * np.random.rand(*parsSize) - 0.1).astype(np.float32))
             else:
                 self.pars = GPUMemory((2.0 * np.random.rand(*parsSize) - 1.0).astype(np.float32))
             self.parsDer = GPUMemory(np.zeros(parsSize, np.float32))
@@ -619,6 +622,30 @@ void transf(float x, float y, float *xoo, float *yoo, float p0, float p1, float 
     }
 
     parsDer[gid] += res;
+}
+            """
+        elif self.layerType == DNNLayerType.BIAS:
+            self.forwardCode = DNNLayer.forwardBaseCode + """
+    int x4 = ngid % o4;
+    ngid /= o4;
+    int x3 = ngid % o3;
+    ngid /= o3;
+    int x2 = ngid % o2;
+    ngid /= o2;
+    int x1 = ngid;
+
+    output[gid] = input[gid] + pars[x2 * o3 * o4 + x3 * o4 + x4];
+}
+            """
+            self.backwardInputCode = DNNLayer.backwardBaseCode + """
+    inputDer[gid] += outputDer[gid];
+}
+            """
+            self.backwardParsCode = DNNLayer.backwardBaseCode + """
+    for(int i=0;i<i1;i++)
+    {
+        parsDer[gid] += outputDer[i * i2 * i3 * i4 + gid];
+    }
 }
             """
         elif self.layerType == DNNLayerType.SOFTMAX:
