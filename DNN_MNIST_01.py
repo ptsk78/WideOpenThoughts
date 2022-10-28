@@ -15,6 +15,16 @@ class DNN_MNIST_01(DNN):
 
         self.layers = []
         self.layers.append(DNNLayer(DNNLayerType.INPUT, (batchSize, d1, d2, d3), None))
+        self.layers.append(DNNLayer(DNNLayerType.PREPROCESS, (batchSize, d1, d2, d3), (batchSize, 7, 1, 1), self.layers[-1], 
+        preprocessPars=[
+            [-30.0 * math.pi / 180.0, 30.0 * math.pi / 180.0],
+            [-0.25, 0.25],
+            [-0.25, 0.25],
+            [0.8, 1.2],
+            [0.5, 1.0],
+            [0.0, 23.0],
+            [0.0, 23.0]
+        ]))
 
         self.layers.append(DNNLayer(DNNLayerType.CONVO, (batchSize, 200, d2-7, d3-7), (d1, 8, 8, 200), self.layers[-1]))
         self.layers.append(DNNLayer(DNNLayerType.MAX, (batchSize, 200, 3, 3), None, self.layers[-1]))
