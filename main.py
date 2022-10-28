@@ -1,6 +1,5 @@
 from DataLoader import DataSet
-from DNN_05 import DNN_05
-from DNN_01 import DNN_01
+from DNN_MNIST_01 import DNN_MNIST_01
 from plots import makePlot
 import os.path
 import os
@@ -16,7 +15,7 @@ os.mkdir(curDir)
 #dnn.loadFromFile('./exp_00000/dnn_03400.npy')
 
 ds = DataSet('MNIST')
-dnn = DNN_01(10, ds.data.shape)
+dnn = DNN_MNIST_01(10, ds.data.shape)
 
 opt = []
 optT = []

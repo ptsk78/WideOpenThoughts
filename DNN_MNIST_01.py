@@ -1,7 +1,7 @@
 from DNN import DNN
 from DNNLayer import DNNLayer, DNNLayerType
 
-class DNN_01(DNN):
+class DNN_MNIST_01(DNN):
     def __init__(self, numClasses, shape, batchSize = 200, relativeStepSize = 0.001, momentum = 0.0, regularization=0.0):
         DNN.__init__(self, numClasses, relativeStepSize, momentum, batchSize, regularization)
 

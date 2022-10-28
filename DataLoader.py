@@ -1,5 +1,6 @@
 import numpy as np
 import struct
+from DataDownloader import download
 
 def unpickleCifar(file):
     import pickle
@@ -57,6 +58,7 @@ def getMNISTData():
 
 class DataSet:
     def __init__(self, dataSetName):
+        download(dataSetName)
         if dataSetName == 'Cifar':
             self.data, self.labels, self.dataTest, self.labelsTest = getCifarData()
         elif dataSetName == 'MNIST':
