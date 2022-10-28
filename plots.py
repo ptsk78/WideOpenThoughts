@@ -73,15 +73,15 @@ def makePlot(opt, optT, cor, corT, confMatr, correctProbs, incorrectProbs, times
 
     ax = fig.add_subplot(gs[2, 3])
 
-    im = np.zeros(((im1.shape[2] + 5)*5,(im1.shape[3]+5)*2,3), np.int32)
+    im = np.zeros(((im1.shape[2] + 5)*5,(im1.shape[3]+5)*2,im1.shape[1]), np.int32)
     for i in range(5):
         for j in range(im1.shape[2]):
             for k in range(im1.shape[3]):
-                for l in range(3):
+                for l in range(im1.shape[1]):
                     im[j + i * (im1.shape[3] + 5),k,l] = int(255.0 * im1[i,l,j,k])
         for j in range(im1.shape[2]):
             for k in range(im1.shape[3]):
-                for l in range(3):
+                for l in range(im1.shape[1]):
                     im[j + i * (im1.shape[3] + 5),k + im1.shape[3] + 5,l] = int(255.0 * im2[i,l,j,k])
     ax.imshow(im)
 

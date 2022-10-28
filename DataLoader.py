@@ -46,8 +46,9 @@ def readImageFile(fileName):
         x2 = r[0] * 256 * 256 * 256 + r[1] * 256 * 256 + r[2] * 256 + r[3]
 
         ret = np.array(struct.unpack('B'*(ni * x1 * x2), file.read(ni * x1 * x2)), np.float32).reshape(ni,1,x1,x2)
-        ret -= 127.5
-        ret /= 127.5
+        #ret -= 127.5
+        #ret /= 127.5
+        ret /= 255.0
  
     return ret
 

@@ -32,7 +32,6 @@ class DNN:
         self.incorrectProbs =[[] for i in range(self.numClasses)]
 
         lastSumOptim = None
-        prevCSZ = None
         while len(all) >= self.batchSize:
             bn += 1
             correctLabel = self.prepareInputOutput(ds, lb, all)
@@ -42,7 +41,7 @@ class DNN:
 
             if isTrain:
                 self.backward()
-                csz = self.update()
+                self.update()
 
             sumOptim, sumCorrect = self.computeStats(correctLabel)
             print('Round {0}, isTrain {1}, Batch number {2}, optim {3}, correct {4}, ss {5}'.format(round, isTrain, bn, sumOptim, sumCorrect, self.relativeStepSize))
@@ -141,14 +140,11 @@ class DNN:
             self.times[i][1] += (s1-s0).total_seconds()
 
     def update(self):
-        curRelStepSize = self.relativeStepSize * (0.7 + 0.6 * np.random.rand())
         for i in range(len(self.layers)-1, 0, -1):
             s0 = datetime.datetime.now()
-            self.layers[i].update(curRelStepSize, self.momentum, self.regularization)
+            self.layers[i].update(self.relativeStepSize, self.momentum, self.regularization)
             s1 = datetime.datetime.now()
             self.times[i][2] += (s1-s0).total_seconds()
-
-        return curRelStepSize
 
     def saveToFile(self, fileName):
         with open(fileName, 'wb') as f:

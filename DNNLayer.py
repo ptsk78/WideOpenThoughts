@@ -156,15 +156,15 @@ __kernel void backward(
 
     def update(self, relativeStepSize, momentum, regularization):
         if self.pars is not None and self.parsDer is not None:
-            self.pars.copyToCPU()
-            self.parsDer.copyToCPU()
-            sumpars = np.sum(np.abs(self.pars.mem)) + 0.0000001
-            sumparsDer = np.sum(np.abs(self.parsDer.mem)) + 0.0000001
-            stepSize = sumpars / sumparsDer * relativeStepSize
+            #self.pars.copyToCPU()
+            #self.parsDer.copyToCPU()
+            #sumpars = np.sum(np.abs(self.pars.mem)) + 0.0000001
+            #sumparsDer = np.sum(np.abs(self.parsDer.mem)) + 0.0000001
+            #stepSize = sumpars / sumparsDer * relativeStepSize
             knl = self.prgUpdate.update
             knl.set_scalar_arg_dtypes([None, None, np.float32, np.float32, np.float32])
             knl(GPUMemory.queue, (self.parsSize[0]*self.parsSize[1]*self.parsSize[2]*self.parsSize[3],), None, 
-            self.pars.memGPU, self.parsDer.memGPU, np.float32(stepSize), np.float32(momentum), np.float32(regularization))
+            self.pars.memGPU, self.parsDer.memGPU, np.float32(relativeStepSize), np.float32(momentum), np.float32(regularization))
             GPUMemory.queue.finish()
 
         if self.outputDer is not None:
@@ -383,11 +383,11 @@ void transf(float x, float y, float *xoo, float *yoo, float p0, float p1, float 
 
         float xo, yo;
 
-        for(int xx=0;xx<11;xx++)
+        //for(int xx=0;xx<11;xx++)
         {
-            for(int yy=0;yy<11;yy++)
+            //for(int yy=0;yy<11;yy++)
             {
-                transf(x3 + 0.05f + 0.9f * (xx + 0.0f) / 10.0f, x4 + 0.05f + 0.9f * (yy + 0.0f) / 10.0f, &xo, &yo, pars[x1 * 5 + 0], pars[x1 * 5 + 1], pars[x1 * 5 + 2], pars[x1 * 5 + 3], pars[x1 * 5 + 4], o3, o4);
+                transf(x3 + 0.5f, x4 + 0.5f, &xo, &yo, pars[x1 * 7 + 0], pars[x1 * 7 + 1], pars[x1 * 7 + 2], pars[x1 * 7 + 3], pars[x1 * 7 + 4], o3, o4);
                 int xxxx = (int)xo;
                 int yyyy = (int)yo;
 
@@ -412,13 +412,13 @@ void transf(float x, float y, float *xoo, float *yoo, float p0, float p1, float 
             }
         }
 
-        if(count==0)
+        if(x3 < ((int)pars[x1 * 7 + 5]) || x3 >= ((int)pars[x1 * 7 + 5]) + 5 || x4 < ((int)pars[x1 * 7 + 6]) || x4 >= ((int)pars[x1 * 7 + 6]) + 5)
         {
-            output[gid] = 0.0f;
+            output[gid] = sum;
         }
         else
         {
-            output[gid] = sum / (0.0f + count);
+            output[gid] = 0.0f;
         }
     }
 }            
