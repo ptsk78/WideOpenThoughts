@@ -3,7 +3,7 @@ from DNNLayer import DNNLayer, DNNLayerType
 import math
 
 class DNN_MNIST_01(DNN):
-    def __init__(self, numClasses, shape, batchSize = 200, relativeStepSize = 0.001, momentum = 0.0, regularization=0.0):
+    def __init__(self, numClasses, shape, batchSize = 50, relativeStepSize = 0.0001, momentum = 0.9, regularization=0.0):
         DNN.__init__(self, numClasses, relativeStepSize, momentum, batchSize, regularization)
 
         self.numClasses = numClasses

@@ -677,7 +677,20 @@ void transf(float x, float y, float *xoo, float *yoo, float p0, float p1, float 
     ngid /= o2;
     int x1 = ngid;
 
-    inputDer[gid] += outputDer[gid] * output[gid] * (1.0f - output[gid]);
+    if(outputDer[gid]!=0.0f)
+    {
+        for(int i=0;i<o2;i++)
+        {
+            if(i==x2)
+            {
+                inputDer[gid] += outputDer[gid] * output[gid] * (1.0f - output[gid]);
+            }
+            else
+            {
+                inputDer[x1 * o2 + i] += -outputDer[gid] * output[gid] * output[x1 * o2 + i];
+            }
+        }
+    }
 }
             """            
         elif self.layerType == DNNLayerType.SIGMOID:
@@ -698,10 +711,6 @@ void transf(float x, float y, float *xoo, float *yoo, float p0, float p1, float 
         {
             res += -log(0.0000001f + max(0.0f, input[gid * i2 + q1]));
         }
-        else
-        {
-            res += -log(1.0000001f - min(1.0f, input[gid * i2 + q1]));
-        }
     }
 
     output[gid] = res;
@@ -713,10 +722,6 @@ void transf(float x, float y, float *xoo, float *yoo, float p0, float p1, float 
         if(pars[gid * i2 + q1] > 0.5f)
         {
             inputDer[gid * i2 + q1] += -1.0f / (0.0000001f + max(0.0f, input[gid * i2 + q1]));
-        }
-        else
-        {
-            inputDer[gid * i2 + q1] += 1.0f / (1.0000001f - min(1.0f, input[gid * i2 + q1]));
         }
     }
 }
