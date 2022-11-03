@@ -56,9 +56,7 @@ __kernel void backward(
 
 
         if parsSize is not None:
-            #self.pars = GPUMemory((2.0 * np.random.rand(*parsSize) - 1.0).astype(np.float32))
             if self.layerType == DNNLayerType.CONVO:
-                #self.pars = GPUMemory(np.random.rand(*parsSize).astype(np.float32))
                 self.pars = GPUMemory((2.0 * np.random.rand(*parsSize) - 1.0).astype(np.float32))
             elif self.layerType == DNNLayerType.BIAS:
                 self.pars = GPUMemory((0.2 * np.random.rand(*parsSize) - 0.1).astype(np.float32))
@@ -390,7 +388,7 @@ void transf(float x, float y, float *xoo, float *yoo, float p0, float p1, float 
         {
             //for(int yy=0;yy<11;yy++)
             {
-                transf(x3 + 0.5f, x4 + 0.5f, &xo, &yo, pars[x1 * 7 + 0], pars[x1 * 7 + 1], pars[x1 * 7 + 2], pars[x1 * 7 + 3], pars[x1 * 7 + 4], o3, o4);
+                transf(x3 + 0.5f, x4 + 0.5f, &xo, &yo, pars[x1 * 9 + 0], pars[x1 * 9 + 1], pars[x1 * 9 + 2], pars[x1 * 9 + 3], pars[x1 * 9 + 4], o3, o4);
                 int xxxx = (int)xo;
                 int yyyy = (int)yo;
 
@@ -415,7 +413,7 @@ void transf(float x, float y, float *xoo, float *yoo, float p0, float p1, float 
             }
         }
 
-        if(x3 < ((int)pars[x1 * 7 + 5]) || x3 >= ((int)pars[x1 * 7 + 5]) + 5 || x4 < ((int)pars[x1 * 7 + 6]) || x4 >= ((int)pars[x1 * 7 + 6]) + 5)
+        if(x3 < ((int)pars[x1 * 9 + 5]) || x3 >= ((int)pars[x1 * 9 + 5]) + ((int)pars[x1 * 9 + 6]) || x4 < ((int)pars[x1 * 9 + 7]) || x4 >= ((int)pars[x1 * 9 + 7]) + ((int)pars[x1 * 9 + 8]))
         {
             output[gid] = sum;
         }
