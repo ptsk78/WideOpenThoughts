@@ -3,12 +3,8 @@ from DNNLayer import DNNLayer, DNNLayerType
 import math
 
 class DNN_MNIST_01(DNN):
-    def __init__(self, numClasses, shape, batchSize = 50, relativeStepSize = 0.0001, momentum = 0.9, regularization=0.0):
-        DNN.__init__(self, numClasses, relativeStepSize, momentum, batchSize, regularization)
-
-        self.numClasses = numClasses
-        self.batchSize = batchSize
-        self.relativeStepSize = relativeStepSize
+    def __init__(self, numClasses, shape, batchSize = 50, stepSize = 0.0001, momentum = 0.9, regularization=0.0):
+        DNN.__init__(self, numClasses, stepSize, momentum, batchSize, regularization, False)
 
         d1 = shape[1]
         d2 = shape[2]

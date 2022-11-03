@@ -154,17 +154,20 @@ __kernel void backward(
         if self.prgBackwardInput is not None and self.prev.outputDer is not None:
             self.executeBackward(self.prgBackwardInput.backward, (self.prev.outputSize[0]*self.prev.outputSize[1]*self.prev.outputSize[2]*self.prev.outputSize[3],))
 
-    def update(self, relativeStepSize, momentum, regularization):
+    def update(self, stepSize, momentum, regularization, relativeStepSize):
         if self.pars is not None and self.parsDer is not None:
-            #self.pars.copyToCPU()
-            #self.parsDer.copyToCPU()
-            #sumpars = np.sum(np.abs(self.pars.mem)) + 0.0000001
-            #sumparsDer = np.sum(np.abs(self.parsDer.mem)) + 0.0000001
-            #stepSize = sumpars / sumparsDer * relativeStepSize
+            if relativeStepSize:
+                self.pars.copyToCPU()
+                self.parsDer.copyToCPU()
+                sumpars = np.sum(np.abs(self.pars.mem)) + 0.0000001
+                sumparsDer = np.sum(np.abs(self.parsDer.mem)) + 0.0000001
+                stepSizeFinal = sumpars / sumparsDer * relativeStepSize
+            else:
+                stepSizeFinal = stepSize 
             knl = self.prgUpdate.update
             knl.set_scalar_arg_dtypes([None, None, np.float32, np.float32, np.float32])
             knl(GPUMemory.queue, (self.parsSize[0]*self.parsSize[1]*self.parsSize[2]*self.parsSize[3],), None, 
-            self.pars.memGPU, self.parsDer.memGPU, np.float32(relativeStepSize), np.float32(momentum), np.float32(regularization))
+            self.pars.memGPU, self.parsDer.memGPU, np.float32(stepSizeFinal), np.float32(momentum), np.float32(regularization))
             GPUMemory.queue.finish()
 
         if self.outputDer is not None:

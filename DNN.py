@@ -8,15 +8,16 @@ from os.path import isfile, join
 from DNNLayer import DNNLayerType
 
 class DNN:
-    def __init__(self, numClasses, relativeStepSize, momentum, batchSize, regularization):
+    def __init__(self, numClasses, stepSize, momentum, batchSize, regularization, relativeStepSize):
         self.firstTime = True
 
         self.numClasses = numClasses
         self.batchSize = batchSize
-        self.relativeStepSize = relativeStepSize
+        self.stepSize = stepSize
         self.momentum = momentum
         self.regularization = regularization
         self.isLoaded = False
+        self.relativeStepSize = relativeStepSize
 
         self.improvements = []
         self.stepsizes = []
@@ -46,7 +47,7 @@ class DNN:
                 self.update()
 
             sumOptim, sumCorrect = self.computeStats(correctLabel)
-            print('Round {0}, isTrain {1}, Batch number {2}, optim {3}, correct {4}, ss {5}'.format(round, isTrain, bn, sumOptim, sumCorrect, self.relativeStepSize))
+            print('Round {0}, isTrain {1}, Batch number {2}, optim {3}, correct {4}'.format(round, isTrain, bn, sumOptim, sumCorrect))
             optim += sumOptim 
             correct += sumCorrect
 
@@ -144,7 +145,7 @@ class DNN:
     def update(self):
         for i in range(len(self.layers)-1, 0, -1):
             s0 = datetime.datetime.now()
-            self.layers[i].update(self.relativeStepSize, self.momentum, self.regularization)
+            self.layers[i].update(self.stepSize, self.momentum, self.regularization, self.relativeStepSize)
             s1 = datetime.datetime.now()
             self.times[i][2] += (s1-s0).total_seconds()
 
