@@ -12,7 +12,6 @@ os.mkdir(curDir)
 
 #ds = DataSet('Cifar')
 #dnn = DNN_05(10, ds.data.shape)
-#dnn.loadFromFile('./exp_00000/dnn_03400.npy')
 
 ds = DataSet('MNIST')
 dnn = DNN_MNIST_01(10, ds.data.shape)
@@ -22,6 +21,9 @@ optT = []
 cor = []
 corT = []
 round = 0
+
+#opt, optT, cor, corT, round = dnn.loadFromDir('./exp_00000/', curDir)
+
 while True:
     optim, correct, confMatr, correctProbs, incorrectProbs, times, im1, im2 = dnn.go(round, ds.data, ds.labels, isTrain=True)
     optimT, correctT, confMatrT, correctProbsT, incorrectProbsT, timesT, im1T, im2T = dnn.go(round, ds.dataTest, ds.labelsTest, isTrain=False)

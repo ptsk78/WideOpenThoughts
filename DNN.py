@@ -2,6 +2,8 @@ from cmath import isnan
 import numpy as np
 import datetime
 import matplotlib.pyplot as plt
+from os import listdir
+from os.path import isfile, join
 
 from DNNLayer import DNNLayerType
 
@@ -153,10 +155,39 @@ class DNN:
                     self.layers[i].pars.copyToCPU()
                     np.save(f, self.layers[i].pars.mem)
 
-    def loadFromFile(self, fileName):
+    def loadFromDir(self, dirname, newdir):
+        onlyfiles = [f for f in listdir(dirname) if isfile(join(dirname, f))]    
+        round = 0
+        dnnfile = ''
+        for file in onlyfiles:
+            if file.startswith('dnn_') and file.endswith('.npy'):
+                tmp = int(file[4:-4])
+                if tmp>=round:
+                    round = tmp
+                    dnnfile = file
+        round += 1
+        opt = []
+        optT = []
+        cor = []
+        corT = []
+        file = open(join(dirname, 'debug.txt'), 'r')
+        fileW = open(join(newdir, 'debug.txt'), 'wt')
+        for i in range(round):
+            line = file.readline()
+            fileW.write(line)
+            tmp = line.split(',')
+            opt.append(float(tmp[1]))
+            cor.append(float(tmp[2]))
+            optT.append(float(tmp[3]))
+            corT.append(float(tmp[4]))
+        file.close()
+        fileW.close()
+
         self.isLoaded = True
-        with open(fileName, 'rb') as f:
+        with open(join(dirname, dnnfile), 'rb') as f:
             for i in range(len(self.layers)):
                 if self.layers[i].pars is not None:
                     self.layers[i].pars.mem = np.load(f)
                     self.layers[i].pars.copyToGPU()
+                    
+        return opt, optT, cor, corT, round
