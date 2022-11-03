@@ -161,7 +161,7 @@ __kernel void backward(
                 self.parsDer.copyToCPU()
                 sumpars = np.sum(np.abs(self.pars.mem)) + 0.0000001
                 sumparsDer = np.sum(np.abs(self.parsDer.mem)) + 0.0000001
-                stepSizeFinal = sumpars / sumparsDer * relativeStepSize
+                stepSizeFinal = sumpars / sumparsDer * stepSize
             else:
                 stepSizeFinal = stepSize 
             knl = self.prgUpdate.update
