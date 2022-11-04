@@ -20,8 +20,10 @@ def downloadFile(url):
         file = tarfile.open('./data{0}'.format(url[url.rindex('/'):]))
         file.extractall('./data/')
         file.close()
-    else:
+    elif url.endswith('.tar.gz'):
         shutil.unpack_archive('./data{0}'.format(url[url.rindex('/'):]), './data/mnist/', 'gz')
+    else:
+        shutil.copy('./data{0}'.format(url[url.rindex('/'):]), './data/ads/'.format(url[url.rindex('/'):]))
 
 def download(dataSetName):
     if not os.path.exists('./data'):
@@ -39,7 +41,12 @@ def download(dataSetName):
                     'http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz',
                     'http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz']
             os.mkdir('./data/mnist')
-            
+    elif dataSetName == 'ADS':
+        if not os.path.exists('./data/ads'):
+            urls = ['https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data',
+                    'https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.test']
+            os.mkdir('./data/ads')
+
     for url in urls:
         downloadFile(url)
 

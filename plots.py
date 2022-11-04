@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-def makePlot(opt, optT, cor, corT, confMatr, correctProbs, incorrectProbs, times, confMatrT, correctProbsT, incorrectProbsT, timesT, im1, im2, fileName):
+def makePlot(opt, optT, cor, corT, confMatr, correctProbs, incorrectProbs, times, confMatrT, correctProbsT, incorrectProbsT, timesT, im1, im2, fileName, isImage):
     fig = plt.figure(figsize=(30,15))
     gs = fig.add_gridspec(3,4)
 
@@ -71,19 +71,20 @@ def makePlot(opt, optT, cor, corT, confMatr, correctProbs, incorrectProbs, times
     ax.bar([i + 5.0 / 7.0 for i in range(timesT.shape[0])], timesT[:,1], width = 1.0/7.0)
     ax.bar([i + 6.0 / 7.0 for i in range(timesT.shape[0])], timesT[:,2], width = 1.0/7.0)
 
-    ax = fig.add_subplot(gs[2, 3])
+    if isImage:
+        ax = fig.add_subplot(gs[2, 3])
 
-    im = np.zeros(((im1.shape[2] + 5)*5,(im1.shape[3]+5)*2,im1.shape[1]), np.int32)
-    for i in range(5):
-        for j in range(im1.shape[2]):
-            for k in range(im1.shape[3]):
-                for l in range(im1.shape[1]):
-                    im[j + i * (im1.shape[3] + 5),k,l] = int(255.0 * im1[i,l,j,k])
-        for j in range(im1.shape[2]):
-            for k in range(im1.shape[3]):
-                for l in range(im1.shape[1]):
-                    im[j + i * (im1.shape[3] + 5),k + im1.shape[3] + 5,l] = int(255.0 * im2[i,l,j,k])
-    ax.imshow(im)
+        im = np.zeros(((im1.shape[2] + 5)*5,(im1.shape[3]+5)*2,im1.shape[1]), np.int32)
+        for i in range(5):
+            for j in range(im1.shape[2]):
+                for k in range(im1.shape[3]):
+                    for l in range(im1.shape[1]):
+                        im[j + i * (im1.shape[3] + 5),k,l] = int(255.0 * im1[i,l,j,k])
+            for j in range(im1.shape[2]):
+                for k in range(im1.shape[3]):
+                    for l in range(im1.shape[1]):
+                        im[j + i * (im1.shape[3] + 5),k + im1.shape[3] + 5,l] = int(255.0 * im2[i,l,j,k])
+        ax.imshow(im)
 
     plt.savefig(fileName)
     plt.close()

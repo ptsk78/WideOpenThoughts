@@ -1,5 +1,6 @@
 from DataLoader import DataSet
 from DNN_MNIST_01 import DNN_MNIST_01
+from DNN_ADS_01 import DNN_ADS_01
 from plots import makePlot
 import os.path
 import os
@@ -12,6 +13,9 @@ os.mkdir(curDir)
 
 #ds = DataSet('Cifar')
 #dnn = DNN_05(10, ds.data.shape)
+
+#ds = DataSet('ADS')
+#dnn = DNN_ADS_01(2, ds.data.shape)
 
 ds = DataSet('MNIST')
 dnn = DNN_MNIST_01(10, ds.data.shape)
@@ -32,7 +36,7 @@ while True:
     cor.append(correct)
     optT.append(optimT)
     corT.append(correctT)
-    makePlot(opt, optT, cor, corT, confMatr, correctProbs, incorrectProbs, times, confMatrT, correctProbsT, incorrectProbsT, timesT, im1, im2, '{0}result_{1:05d}.png'.format(curDir, round))
+    makePlot(opt, optT, cor, corT, confMatr, correctProbs, incorrectProbs, times, confMatrT, correctProbsT, incorrectProbsT, timesT, im1, im2, '{0}result_{1:05d}.png'.format(curDir, round), ds.isImage)
 
     print('{0}, {1}, {2}, {3}, {4}'.format(round, optim, correct, optimT, correctT))
     f = open('{0}debug.txt'.format(curDir), 'at')
