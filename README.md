@@ -4,7 +4,7 @@ Experimental unfinished code. (if you find good DNN for CIFAR-10 dataset with th
 
 | DataSet  | DNN | Test Accuracy |
 | ------------- | ------------- |------------- |
-| [MNIST](http://yann.lecun.com/exdb/mnist/)  | DNN_MNIST_01.py | over 99% |
+| [MNIST](http://yann.lecun.com/exdb/mnist/)  | DNN_MNIST_01.py | >99% |
 | [ADS](https://archive.ics.uci.edu/ml/datasets/adult)  | DNN_ADS_01.py  | ~85%|
 | [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html)  | ?  | ?|
 
