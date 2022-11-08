@@ -20,10 +20,11 @@ def downloadFile(url):
         file = tarfile.open('./data{0}'.format(url[url.rindex('/'):]))
         file.extractall('./data/')
         file.close()
-    elif url.endswith('.tar.gz'):
+        return
+    if url.endswith('.gz'):
         shutil.unpack_archive('./data{0}'.format(url[url.rindex('/'):]), './data/mnist/', 'gz')
-    else:
-        shutil.copy('./data{0}'.format(url[url.rindex('/'):]), './data/ads/'.format(url[url.rindex('/'):]))
+        return
+    shutil.copy('./data{0}'.format(url[url.rindex('/'):]), './data/ads/'.format(url[url.rindex('/'):]))
 
 def download(dataSetName):
     if not os.path.exists('./data'):
@@ -33,7 +34,7 @@ def download(dataSetName):
         if not os.path.exists('./data/cifar-10-batches-py/'):
             urls = ['https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz']
             os.mkdir('./data/cifar-10-batches-py')
-    elif dataSetName == 'MNIST':
+    if dataSetName == 'MNIST':
         shutil.register_unpack_format('gz', ['.gz', ], gunzip_something)
         if not os.path.exists('./data/mnist'):
             urls = ['http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz',
@@ -41,7 +42,7 @@ def download(dataSetName):
                     'http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz',
                     'http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz']
             os.mkdir('./data/mnist')
-    elif dataSetName == 'ADS':
+    if dataSetName == 'ADS':
         if not os.path.exists('./data/ads'):
             urls = ['https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data',
                     'https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.test']

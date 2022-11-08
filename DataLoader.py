@@ -149,9 +149,9 @@ class DataSet:
         if dataSetName == 'Cifar':
             self.data, self.labels, self.dataTest, self.labelsTest = getCifarData()
             self.isImage = True
-        elif dataSetName == 'MNIST':
+        if dataSetName == 'MNIST':
             self.data, self.labels, self.dataTest, self.labelsTest = getMNISTData()
             self.isImage = True
-        elif dataSetName == 'ADS':
+        if dataSetName == 'ADS':
             self.data, self.labels, self.dataTest, self.labelsTest = getADSData()
             self.isImage = False
