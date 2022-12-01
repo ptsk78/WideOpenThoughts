@@ -8,19 +8,20 @@ class DNNLayerType(Enum):
     PREPROCESS = 2
     NOISE = 3
     CONVO = 4
-    RELU = 5
-    FRELU = 6
-    FFRELU = 7
-    FFFRELU = 8
-    AVER = 9
-    MAX = 10
-    MATRIX = 11
-    DROPOUT = 12
-    SIGMOID = 13
-    SOFTMAX = 14
-    SUM = 15
-    FINAL = 16
-    BIAS = 17
+    FINCONVO = 5
+    RELU = 6
+    FRELU = 7
+    FFRELU = 8
+    FFFRELU = 9
+    AVER = 10
+    MAX = 11
+    MATRIX = 12
+    DROPOUT = 13
+    SIGMOID = 14
+    SOFTMAX = 15
+    SUM = 16
+    FINAL = 17
+    BIAS = 18
 
 class DNNLayer:
     forwardBaseCode = """
@@ -178,7 +179,7 @@ __kernel void update(
 {
     uint gid = get_global_id(0);
     
-    pars[gid] -= (parsDer[gid] + 2.0f * regularization * pars[gid]) * stepSize;
+    pars[gid] -= parsDer[gid] * stepSize + 2.0f * regularization * pars[gid];
     parsDer[gid] *= momentum;
 }
         """
@@ -260,6 +261,89 @@ __kernel void update(
     }
 
     parsDer[gid] += res;
+}   
+            """            
+        if self.layerType == DNNLayerType.FINCONVO:
+            self.forwardCode = DNNLayer.forwardBaseCode + """
+    int x4 = ngid % o4;
+    ngid /= o4;
+    int x3 = ngid % o3;
+    ngid /= o3;
+    int x2 = ngid % o2;
+    ngid /= o2;
+    int x1 = ngid;
+
+    float res = 0.0f;
+    for(int q1=0;q1<i2;q1++)
+    {
+        for(int q2=0;q2<i3-o3+1;q2++)
+        {
+            for(int q3=0;q3<i4-o4+1;q3++)
+            {
+                float tmp = pars[q1 * (i3-o3+1) * (i4-o4+1) * o2 + q2 * (i4-o4+1) * o2 + q3 * o2 + x2];
+                float tmp2 = 2.0f / (1.0f + exp(tmp)) - 1.0f;
+                res += input[x1 * i2 * i3 * i4 + q1 * i3 * i4 + (x3 + q2) * i4 + (x4 + q3)] * tmp2;
+            }
+        }
+    }
+
+    output[gid] = res;
+}
+            """
+            self.backwardCode = None
+            self.backwardInputCode = DNNLayer.backwardBaseCode + """
+    int x4 = ngid % i4;
+    ngid /= i4;
+    int x3 = ngid % i3;
+    ngid /= i3;
+    int x2 = ngid % i2;
+    ngid /= i2;
+    int x1 = ngid;
+
+    float res = 0.0f;
+    for(int q1=0;q1<o2;q1++)
+    {
+        for(int q2=0;q2<i3-o3+1;q2++)
+        {
+            for(int q3=0;q3<i4-o4+1;q3++)
+            {
+                if((x3 - q2)>=0 && (x3 - q2)<o3 && (x4 - q3)>=0 && (x4 - q3)<o4)
+                {
+                    float tmp = pars[x2 * (i3-o3+1) * (i4-o4+1) * o2 + q2 * (i4-o4+1) * o2 + q3 * o2 + q1];
+                    float tmp2 = 2.0f / (1.0f + exp(tmp)) - 1.0f;
+                    res += outputDer[x1 * o2 * o3 * o4 + q1 * o3 * o4 + (x3 - q2) * o4 + (x4 - q3)] * tmp2;
+                }
+            }
+        }
+    }
+
+    inputDer[gid] += res;
+}            
+            """
+            self.backwardParsCode = DNNLayer.backwardBaseCode + """
+    int x4 = ngid % o2;
+    ngid /= o2;
+    int x3 = ngid % (i4-o4+1);
+    ngid /= (i4-o4+1);
+    int x2 = ngid % (i3-o3+1);
+    ngid /= (i3-o3+1);
+    int x1 = ngid;
+
+    float res = 0.0f;
+    for(int q1=0;q1<i1;q1++)
+    {
+        for(int q2=0;q2<o3;q2++)
+        {
+            for(int q3=0;q3<o4;q3++)
+            {
+                res += outputDer[q1 * o2 * o3 * o4 + x4 * o3 * o4 + q2 * o4 + q3] * input[q1 * i2 * i3 * i4 + x1 * i3 * i4 + (q2 + x2) * i4 + (q3 + x3)];
+            }
+        }
+    }
+    float tmp = pars[gid];
+    float tmp2 = -2.0f * exp(tmp) / ((1.0f + exp(tmp))*(1.0f + exp(tmp)));
+
+    parsDer[gid] += res * tmp2;
 }   
             """
         elif self.layerType == DNNLayerType.RELU:

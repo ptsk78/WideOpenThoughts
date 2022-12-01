@@ -1,6 +1,7 @@
 from DataLoader import DataSet
 from DNN_MNIST_01 import DNN_MNIST_01
 from DNN_ADS_01 import DNN_ADS_01
+from DNN_CIFAR10_01 import DNN_CIFAR10_01
 from plots import makePlot
 import os.path
 import os
@@ -11,14 +12,14 @@ while os.path.isdir('./exp_{0:05d}/'.format(expNum)):
 curDir = './exp_{0:05d}/'.format(expNum)
 os.mkdir(curDir)
 
-#ds = DataSet('Cifar')
-#dnn = DNN_05(10, ds.data.shape)
+ds = DataSet('Cifar')
+dnn = DNN_CIFAR10_01(10, ds.data.shape)
 
 #ds = DataSet('ADS')
 #dnn = DNN_ADS_01(2, ds.data.shape)
 
-ds = DataSet('MNIST')
-dnn = DNN_MNIST_01(10, ds.data.shape)
+#ds = DataSet('MNIST')
+#dnn = DNN_MNIST_01(10, ds.data.shape)
 
 opt = []
 optT = []
