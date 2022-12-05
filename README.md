@@ -1,6 +1,6 @@
 # Wide Open Thoughts
 
-Experimental unfinished code. (if you find good DNN for CIFAR-10 dataset with this framework - test accuracy over 90%, feel free to do pull request - it would be appreciated :)
+Experimental unfinished code. (if you find good DNN for CIFAR-10 dataset with this framework - test accuracy over 90%, feel free to do pull request - it would be appreciated :) - it obviously needs some tuning to do for CIFAR-10)
 
 This framework was written in [Python](https://www.python.org/) and [PyOpenCL](https://documen.tician.de/pyopencl/) from scratch to train neural networks and to show you don't need a lot of code to start such research project from scratch.
 
