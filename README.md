@@ -6,5 +6,5 @@ Experimental unfinished code. (if you find good DNN for CIFAR-10 dataset with th
 | ------------- | ------------- |------------- |
 | [MNIST](http://yann.lecun.com/exdb/mnist/)  | DNN_MNIST_01.py | >99% |
 | [ADS](https://archive.ics.uci.edu/ml/datasets/adult)  | DNN_ADS_01.py  | ~85% |
-| [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html)  | DNN_CIFAR10_01.py  | ~86.5 |
+| [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html)  | DNN_CIFAR10_01.py  | ~86.5% |
 
