@@ -22,4 +22,4 @@ Some results on three datasets:
 | [ADS](https://archive.ics.uci.edu/ml/datasets/adult)  | DNN_ADS_01.py  | ~85% |
 | [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html)  | DNN_CIFAR10_01.py  | ~86.5% |
 
-If you find good DNN for CIFAR-10 dataset with this framework - test accuracy over 90%, feel free to do pull request - it would be appreciated :) - it obviously needs some tuning to do for CIFAR-10
+If you find good DNN for CIFAR-10 dataset with this framework - test accuracy over 90%, feel free to do pull request - it would be appreciated :) - it obviously needs some tuning to do for CIFAR-10 (so far I got ~89%, but did not keep the file)
