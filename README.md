@@ -1,6 +1,6 @@
 # Wide Open Thoughts
 
-This framework was written in [Python](https://www.python.org/) and [PyOpenCL](https://documen.tician.de/pyopencl/) from scratch to train neural networks and to show that you don't need a lot of code to start such research project from scratch.
+This framework was written in [Python](https://www.python.org/) and [PyOpenCL](https://documen.tician.de/pyopencl/) from scratch to train neural networks and to show that you don't need a lot of code to start such research project from scratch. It uses relative step size for each layer, so there is less need to tune numerics to make it stable.
 
 | File  | Number of lines |
 | ------------- | ------------- |
